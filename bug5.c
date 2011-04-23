@@ -65,7 +65,7 @@ main(int argc, char *argv[])
 	int cc;
 	struct termios rtt;
 	struct winsize win;
-	int aflg, kflg, n;
+	int n;
 	struct timeval tv, *tvp;
 	time_t tvec, start;
 	char obuf[BUFSIZ];
@@ -79,8 +79,6 @@ main(int argc, char *argv[])
 	u2b=bsdconv_create("utf-8,ascii,byte:big5,ascii,byte");
 	bsdconv_init(b2u);
 	bsdconv_init(u2b);
-
-	aflg = kflg = 0;
 
 	if (argc > 0) {
 		fname = argv[0];
