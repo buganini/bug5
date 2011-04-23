@@ -58,6 +58,7 @@ static const char sccsid[] = "@(#)script.c	8.1 (Berkeley) 6/6/93";
 #include <string.h>
 #include <termios.h>
 #include <unistd.h>
+#include <bsdconv.h>
 
 static FILE *fscript;
 static int master, slave;
@@ -86,6 +87,13 @@ main(int argc, char *argv[])
 	char ibuf[BUFSIZ];
 	fd_set rfd;
 	int flushtime = 30;
+	struct bsdconv_instance *b2u;
+	struct bsdconv_instance *u2b;
+
+	b2u=bsdconv_create("big5,ascii:utf-8,ascii");
+	u2b=bsdconv_create("utf-8,ascii:big5,ascii");
+	bsdconv_init(b2u);
+	bsdconv_init(u2b);
 
 	aflg = kflg = 0;
 	while ((ch = getopt(argc, argv, "aqkt:")) != -1)
@@ -179,7 +187,14 @@ main(int argc, char *argv[])
 			if (cc == 0)
 				(void)write(master, ibuf, 0);
 			if (cc > 0) {
-				(void)write(master, ibuf, cc);
+				u2b->input.data=ibuf;
+				u2b->input.len=cc;
+				u2b->input.flags=0;
+				u2b->flush=1;
+				u2b->output_mode=BSDCONV_FD;
+				u2b->output.data=(void *)(uintptr_t)master;
+				bsdconv(u2b);
+//				(void)write(master, ibuf, cc);
 				if (kflg && tcgetattr(master, &stt) >= 0 &&
 				    ((stt.c_lflag & ECHO) == 0)) {
 					(void)fwrite(ibuf, 1, cc, fscript);
@@ -190,7 +205,14 @@ main(int argc, char *argv[])
 			cc = read(master, obuf, sizeof (obuf));
 			if (cc <= 0)
 				break;
-			(void)write(STDOUT_FILENO, obuf, cc);
+				b2u->input.data=obuf;
+				b2u->input.len=cc;
+				b2u->input.flags=0;
+				b2u->flush=1;
+				b2u->output_mode=BSDCONV_FD;
+				b2u->output.data=(void *)(uintptr_t)STDOUT_FILENO;
+				bsdconv(b2u);			
+//			(void)write(STDOUT_FILENO, obuf, cc);
 			(void)fwrite(obuf, 1, cc, fscript);
 		}
 		tvec = time(0);
