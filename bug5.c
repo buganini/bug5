@@ -126,9 +126,6 @@ main(int argc, char *argv[])
 	} else
 		fname = "typescript";
 
-	if ((fscript = fopen(fname, aflg ? "a" : "w")) == NULL)
-		err(1, "%s", fname);
-
 	if ((ttyflg = isatty(STDIN_FILENO)) != 0) {
 		if (tcgetattr(STDIN_FILENO, &tt) == -1)
 			err(1, "tcgetattr");
@@ -143,9 +140,6 @@ main(int argc, char *argv[])
 
 	if (!qflg) {
 		tvec = time(NULL);
-		(void)printf("Script started, output file is %s\n", fname);
-		(void)fprintf(fscript, "Script started on %s", ctime(&tvec));
-		fflush(fscript);
 	}
 	if (ttyflg) {
 		rtt = tt;
@@ -210,7 +204,6 @@ main(int argc, char *argv[])
 		}
 		tvec = time(0);
 		if (tvec - start >= flushtime) {
-			fflush(fscript);
 			start = tvec;
 		}
 	}
@@ -253,12 +246,9 @@ doshell(char **av)
 		shell = _PATH_BSHELL;
 
 	if (av[0])
-		for (k = 0 ; av[k] ; ++k)
-			fprintf(fscript, "%s%s", k ? " " : "", av[k]);
-		fprintf(fscript, "\r\n");
+		for (k = 0 ; av[k] ; ++k);
 
 	(void)close(master);
-	(void)fclose(fscript);
 	login_tty(slave);
 	setenv("SCRIPT", fname, 1);
 	if (av[0]) {
@@ -286,11 +276,6 @@ done(int eno)
 	if (ttyflg)
 		(void)tcsetattr(STDIN_FILENO, TCSAFLUSH, &tt);
 	tvec = time(NULL);
-	if (!qflg) {
-		(void)fprintf(fscript,"\nScript done on %s", ctime(&tvec));
-		(void)printf("\nScript done, output file is %s\n", fname);
-	}
-	(void)fclose(fscript);
 	(void)close(master);
 	exit(eno);
 }
