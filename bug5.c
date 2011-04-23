@@ -213,9 +213,6 @@ doshell(char **av)
 	if (shell == NULL)
 		shell = _PATH_BSHELL;
 
-	if (av[0])
-		for (k = 0 ; av[k] ; ++k);
-
 	(void)close(master);
 	login_tty(slave);
 	setenv("SCRIPT", fname, 1);
