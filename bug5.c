@@ -194,11 +194,6 @@ main(int argc, char *argv[])
 				u2b->output_mode=BSDCONV_FD;
 				u2b->output.data=(void *)(uintptr_t)master;
 				bsdconv(u2b);
-//				(void)write(master, ibuf, cc);
-				if (kflg && tcgetattr(master, &stt) >= 0 &&
-				    ((stt.c_lflag & ECHO) == 0)) {
-					(void)fwrite(ibuf, 1, cc, fscript);
-				}
 			}
 		}
 		if (n > 0 && FD_ISSET(master, &rfd)) {
@@ -212,8 +207,6 @@ main(int argc, char *argv[])
 				b2u->output_mode=BSDCONV_FD;
 				b2u->output.data=(void *)(uintptr_t)STDOUT_FILENO;
 				bsdconv(b2u);			
-//			(void)write(STDOUT_FILENO, obuf, cc);
-			(void)fwrite(obuf, 1, cc, fscript);
 		}
 		tvec = time(0);
 		if (tvec - start >= flushtime) {
