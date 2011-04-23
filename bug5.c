@@ -207,7 +207,6 @@ static void
 doshell(char **av)
 {
 	const char *shell;
-	int k;
 
 	shell = getenv("SHELL");
 	if (shell == NULL)
