@@ -90,8 +90,8 @@ main(int argc, char *argv[])
 	struct bsdconv_instance *b2u;
 	struct bsdconv_instance *u2b;
 
-	b2u=bsdconv_create("big5,ascii:utf-8,ascii");
-	u2b=bsdconv_create("utf-8,ascii:big5,ascii");
+	b2u=bsdconv_create("big5,ascii,byte:utf-8,ascii,byte");
+	u2b=bsdconv_create("utf-8,ascii,byte:big5,ascii,byte");
 	bsdconv_init(b2u);
 	bsdconv_init(u2b);
 
