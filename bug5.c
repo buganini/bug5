@@ -60,7 +60,6 @@ static const char sccsid[] = "@(#)script.c	8.1 (Berkeley) 6/6/93";
 #include <unistd.h>
 #include <bsdconv.h>
 
-static FILE *fscript;
 static int master, slave;
 static int child;
 static const char *fname;
@@ -72,15 +71,14 @@ static void done(int) __dead2;
 static void doshell(char **);
 static void fail(void);
 static void finish(void);
-static void usage(void);
 
 int
 main(int argc, char *argv[])
 {
 	int cc;
-	struct termios rtt, stt;
+	struct termios rtt;
 	struct winsize win;
-	int aflg, kflg, ch, n;
+	int aflg, kflg, n;
 	struct timeval tv, *tvp;
 	time_t tvec, start;
 	char obuf[BUFSIZ];
@@ -187,14 +185,6 @@ main(int argc, char *argv[])
 	}
 	finish();
 	done(0);
-}
-
-static void
-usage(void)
-{
-	(void)fprintf(stderr,
-	    "usage: script [-akq] [-t time] [file [command ...]]\n");
-	exit(1);
 }
 
 static void
