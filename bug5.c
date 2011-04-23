@@ -169,14 +169,14 @@ main(int argc, char *argv[])
 		if (n > 0 && FD_ISSET(master, &rfd)) {
 			cc = read(master, obuf, sizeof (obuf));
 			if (cc <= 0)
-				break;
-				b2u->input.data=obuf;
-				b2u->input.len=cc;
-				b2u->input.flags=0;
-				b2u->flush=1;
-				b2u->output_mode=BSDCONV_FD;
-				b2u->output.data=(void *)(uintptr_t)STDOUT_FILENO;
-				bsdconv(b2u);			
+				break;	
+			b2u->input.data=obuf;
+			b2u->input.len=cc;
+			b2u->input.flags=0;
+			b2u->flush=1;
+			b2u->output_mode=BSDCONV_FD;
+			b2u->output.data=(void *)(uintptr_t)STDOUT_FILENO;
+			bsdconv(b2u);			
 		}
 		tvec = time(0);
 		if (tvec - start >= flushtime) {
