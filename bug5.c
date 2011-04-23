@@ -96,28 +96,6 @@ main(int argc, char *argv[])
 	bsdconv_init(u2b);
 
 	aflg = kflg = 0;
-	while ((ch = getopt(argc, argv, "aqkt:")) != -1)
-		switch(ch) {
-		case 'a':
-			aflg = 1;
-			break;
-		case 'q':
-			qflg = 1;
-			break;
-		case 'k':
-			kflg = 1;
-			break;
-		case 't':
-			flushtime = atoi(optarg);
-			if (flushtime < 0)
-				err(1, "invalid flush time %d", flushtime);
-			break;
-		case '?':
-		default:
-			usage();
-		}
-	argc -= optind;
-	argv += optind;
 
 	if (argc > 0) {
 		fname = argv[0];
