@@ -75,11 +75,15 @@ main(int argc, char *argv[])
 	struct bsdconv_instance *b2u;
 	struct bsdconv_instance *u2b;
 	int pad=0;
+	int zhcn=0;
 
-	while ((ch = getopt(argc, argv, "p")) != -1)
+	while ((ch = getopt(argc, argv, "ps")) != -1)
 		switch(ch) {
 		case 'p':
 			pad = 1;
+			break;
+		case 's':
+			zhcn = 1;
 			break;
 		
 		case '?':
@@ -89,12 +93,19 @@ main(int argc, char *argv[])
 	argc -= optind;
 	argv += optind;
 
-	if(pad){
-		b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw");
+	if(zhcn){
+		u2b=bsdconv_create("utf-8,ascii,byte:zhtw:zhtw_words:big5,ascii,byte");
+		if(pad)
+			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw");
+		else
+			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw");
 	}else{
-		b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw");
+		u2b=bsdconv_create("utf-8,ascii,byte:big5,ascii,byte");
+		if(pad)
+			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw");
+		else
+			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw");
 	}
-	u2b=bsdconv_create("utf-8,ascii,byte:big5,ascii,byte");
 	bsdconv_init(b2u);
 	bsdconv_init(u2b);
 
@@ -187,7 +198,7 @@ static void
 usage(void)
 {
 	(void)fprintf(stderr,
-	    "usage: bug5 [-p] [command ...]\n");
+	    "usage: bug5 [-ps] [command ...]\n");
 	exit(1);
 }
 
