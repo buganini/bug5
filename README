@@ -7,3 +7,7 @@ Features that screen doesn't have:
 
 Features that both bug5 and screen has:
 	Optional ambiguous-width characters padding
+
+
+Dependency:
+	bsdconv-4.5+
