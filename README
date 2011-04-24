@@ -13,3 +13,9 @@ Features that both bug5 and screen has:
 
 Dependency:
 	bsdconv-4.5+
+
+
+Related projects:
+	screen
+	luit
+	hztty
