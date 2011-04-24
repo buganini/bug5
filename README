@@ -1,4 +1,5 @@
 bug5 is a Big5 <-> UTF-8 translating layer in terminal.
+It's modified from script(1).
 
 Features that screen doesn't have:
 	UAO
