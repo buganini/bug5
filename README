@@ -1,1 +1,9 @@
-bug5 is a Big5 <-> UTF-8 translating layer in terminal.	
+bug5 is a Big5 <-> UTF-8 translating layer in terminal.
+
+Features that screen doesn't have:
+	ANSI-Broken Big5 (eg. Double Color) fixing
+	Optional Traditional-Simplified conversion
+	BSD License
+
+Features that both bug5 and screen has:
+	Optional ambiguous-width characters padding
