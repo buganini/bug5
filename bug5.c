@@ -106,6 +106,12 @@ main(int argc, char *argv[])
 		else
 			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw");
 	}
+	if(b2u==NULL || u2b==NULL){
+		fprintf(stderr,"Failed creating bsdconv instance, you may need to update bsdconv.\n");
+		if(b2u!=NULL) bsdconv_destroy(b2u);
+		if(u2b!=NULL) bsdconv_destroy(u2b);
+		exit(1);
+	}
 	bsdconv_init(b2u);
 	bsdconv_init(u2b);
 
