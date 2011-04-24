@@ -75,8 +75,7 @@ main(int argc, char *argv[])
 	struct bsdconv_instance *b2u;
 	struct bsdconv_instance *u2b;
 
-	b2u=bsdconv_create("ansi-control,ascii,big5,byte:big5-defrag:unicode,ansi-control,byte|skip,big5:utf-8,ascii,bsdconv_raw");
-//	b2u=bsdconv_create("big5,ascii,byte:utf-8,ascii,byte");
+	b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw");
 	u2b=bsdconv_create("utf-8,ascii,byte:big5,ascii,byte");
 	bsdconv_init(b2u);
 	bsdconv_init(u2b);
