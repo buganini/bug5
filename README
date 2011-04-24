@@ -1,6 +1,7 @@
 bug5 is a Big5 <-> UTF-8 translating layer in terminal.
 
 Features that screen doesn't have:
+	UAO
 	ANSI-Broken Big5 (eg. Double Color) fixing
 	Optional Traditional-Simplified conversion
 	BSD License
