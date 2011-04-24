@@ -49,7 +49,6 @@
 
 static int master, slave;
 static int child;
-static const char *fname;
 static int qflg, ttyflg;
 
 static struct termios tt;
@@ -58,6 +57,7 @@ static void done(int) __dead2;
 static void doshell(char **);
 static void fail(void);
 static void finish(void);
+static void usage(void);
 
 int
 main(int argc, char *argv[])
@@ -65,7 +65,7 @@ main(int argc, char *argv[])
 	int cc;
 	struct termios rtt;
 	struct winsize win;
-	int n;
+	int ch, n;
 	struct timeval tv, *tvp;
 	time_t tvec, start;
 	char obuf[BUFSIZ];
@@ -74,18 +74,29 @@ main(int argc, char *argv[])
 	int flushtime = 30;
 	struct bsdconv_instance *b2u;
 	struct bsdconv_instance *u2b;
+	int pad=0;
 
-	b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw");
+	while ((ch = getopt(argc, argv, "p")) != -1)
+		switch(ch) {
+		case 'p':
+			pad = 1;
+			break;
+		
+		case '?':
+		default:
+			usage();
+		}
+	argc -= optind;
+	argv += optind;
+
+	if(pad){
+		b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw");
+	}else{
+		b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw");
+	}
 	u2b=bsdconv_create("utf-8,ascii,byte:big5,ascii,byte");
 	bsdconv_init(b2u);
 	bsdconv_init(u2b);
-
-	if (argc > 0) {
-		fname = argv[0];
-		argv++;
-		argc--;
-	} else
-		fname = "typescript";
 
 	if ((ttyflg = isatty(STDIN_FILENO)) != 0) {
 		if (tcgetattr(STDIN_FILENO, &tt) == -1)
@@ -173,6 +184,14 @@ main(int argc, char *argv[])
 }
 
 static void
+usage(void)
+{
+	(void)fprintf(stderr,
+	    "usage: bug5 [-p] [command ...]\n");
+	exit(1);
+}
+
+static void
 finish(void)
 {
 	int e, status;
@@ -199,7 +218,6 @@ doshell(char **av)
 
 	(void)close(master);
 	login_tty(slave);
-	setenv("SCRIPT", fname, 1);
 	if (av[0]) {
 		execvp(av[0], av);
 		warn("%s", av[0]);
