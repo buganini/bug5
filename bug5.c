@@ -96,15 +96,15 @@ main(int argc, char *argv[])
 	if(zhcn){
 		u2b=bsdconv_create("utf-8,ascii,byte:zhtw:zhtw_words:big5,ascii,byte");
 		if(pad)
-			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw");
+			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw");
 		else
-			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw");
+			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw");
 	}else{
 		u2b=bsdconv_create("utf-8,ascii,byte:big5,ascii,byte");
 		if(pad)
-			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw");
+			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw");
 		else
-			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,unicode,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw");
+			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw");
 	}
 	bsdconv_init(b2u);
 	bsdconv_init(u2b);
