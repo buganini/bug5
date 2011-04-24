@@ -198,7 +198,10 @@ static void
 usage(void)
 {
 	(void)fprintf(stderr,
-	    "usage: bug5 [-ps] [command ...]\n");
+	    "usage: bug5 [-ps] [command ...]\n"
+	    "\t -p\tpad ambiguous-width characters\n"
+	    "\t -s\tconversion for simplified chinese\n"
+		);
 	exit(1);
 }
 
