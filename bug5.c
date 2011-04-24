@@ -65,18 +65,18 @@ main(int argc, char *argv[])
 	int cc;
 	struct termios rtt;
 	struct winsize win;
-	int n,t=0,s=0;
-	unsigned char c;
+	int n;
 	struct timeval tv, *tvp;
 	time_t tvec, start;
-	unsigned char obuf[BUFSIZ];
-	unsigned char ibuf[BUFSIZ];
+	char obuf[BUFSIZ];
+	char ibuf[BUFSIZ];
 	fd_set rfd;
 	int flushtime = 30;
 	struct bsdconv_instance *b2u;
 	struct bsdconv_instance *u2b;
 
-	b2u=bsdconv_create("big5,ascii,byte:utf-8,ascii,byte");
+	b2u=bsdconv_create("ansi-control,ascii,big5,byte:big5-defrag:unicode,ansi-control,byte|skip,big5:utf-8,ascii,bsdconv_raw");
+//	b2u=bsdconv_create("big5,ascii,byte:utf-8,ascii,byte");
 	u2b=bsdconv_create("utf-8,ascii,byte:big5,ascii,byte");
 	bsdconv_init(b2u);
 	bsdconv_init(u2b);
@@ -146,7 +146,7 @@ main(int argc, char *argv[])
 				u2b->input.data=ibuf;
 				u2b->input.len=cc;
 				u2b->input.flags=0;
-				u2b->flush=1;
+//				u2b->flush=1;
 				u2b->output_mode=BSDCONV_FD;
 				u2b->output.data=(void *)(uintptr_t)master;
 				bsdconv(u2b);
@@ -156,40 +156,10 @@ main(int argc, char *argv[])
 			cc = read(master, obuf, sizeof (obuf));
 			if (cc <= 0)
 				break;	
-			for(n=0;n<cc;++n){
-				switch(s){
-					case 0:
-						if(obuf[n]>0x7f){
-							s=1;
-						}
-						break;
-					case 1:
-						if(obuf[n]==0x1b){
-							s=2;
-							t=n;
-						}else{
-							s=0;
-						}
-						break;
-					case 2:
-						if(obuf[n]=='m'){
-							s=3;
-						}
-						break;
-					case 3:
-						if(obuf[n]!=0x1b){
-							s=0;
-							c=obuf[n];
-							memmove(&obuf[t+1],&obuf[t],n-t);
-							obuf[t]=c;
-						}
-						break;
-				}
-			}
 			b2u->input.data=obuf;
 			b2u->input.len=cc;
 			b2u->input.flags=0;
-			b2u->flush=1;
+//			b2u->flush=1;
 			b2u->output_mode=BSDCONV_FD;
 			b2u->output.data=(void *)(uintptr_t)STDOUT_FILENO;
 			bsdconv(b2u);			
