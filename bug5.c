@@ -94,7 +94,7 @@ main(int argc, char *argv[])
 	argv += optind;
 
 	if(zhcn){
-		u2b=bsdconv_create("utf-8,ascii,byte:zhtw:zhtw_words:big5,ascii,byte");
+		u2b=bsdconv_create("utf-8,ascii,byte:zhtw:zhtw_words:big5,cp950_trans,ascii,byte");
 		if(pad)
 			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw");
 		else
