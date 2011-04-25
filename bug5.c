@@ -98,7 +98,7 @@ main(int argc, char *argv[])
 
 	if(zhcn){
 		if(uao)
-			u2b=bsdconv_create("utf-8,ascii,byte:zhtw:zhtw_words:big5,cp950_trans,uao,ascii,3f");
+			u2b=bsdconv_create("utf-8,ascii,byte:zhtw:zhtw_words:big5,cp950_trans,uao241,ascii,3f");
 		else
 			u2b=bsdconv_create("utf-8,ascii,byte:zhtw:zhtw_words:big5,cp950_trans,ascii,3f");
 		if(pad)
@@ -107,7 +107,7 @@ main(int argc, char *argv[])
 			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw");
 	}else{
 		if(uao)
-			u2b=bsdconv_create("utf-8,ascii,byte:zhtw:big5,cp950_trans,uao,ascii,3f");
+			u2b=bsdconv_create("utf-8,ascii,byte:zhtw:big5,cp950_trans,uao241,ascii,3f");
 		else
 			u2b=bsdconv_create("utf-8,ascii,byte:zhtw:big5,cp950_trans,ascii,3f");
 		if(pad)
