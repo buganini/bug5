@@ -76,8 +76,9 @@ main(int argc, char *argv[])
 	struct bsdconv_instance *u2b;
 	int pad=0;
 	int zhcn=0;
+	int uao=0;
 
-	while ((ch = getopt(argc, argv, "ps")) != -1)
+	while ((ch = getopt(argc, argv, "psu")) != -1)
 		switch(ch) {
 		case 'p':
 			pad = 1;
@@ -85,7 +86,9 @@ main(int argc, char *argv[])
 		case 's':
 			zhcn = 1;
 			break;
-		
+		case 'u':
+			uao = 1;
+			break;
 		case '?':
 		default:
 			usage();
@@ -94,13 +97,19 @@ main(int argc, char *argv[])
 	argv += optind;
 
 	if(zhcn){
-		u2b=bsdconv_create("utf-8,ascii,byte:zhtw:zhtw_words:big5,cp950_trans,ascii,3f");
+		if(uao)
+			u2b=bsdconv_create("utf-8,ascii,byte:zhtw:zhtw_words:big5,cp950_trans,uao,ascii,3f");
+		else
+			u2b=bsdconv_create("utf-8,ascii,byte:zhtw:zhtw_words:big5,cp950_trans,ascii,3f");
 		if(pad)
 			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw");
 		else
 			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw");
 	}else{
-		u2b=bsdconv_create("utf-8,ascii,byte:zhtw:big5,cp950_trans,moz18,ascii,3f");
+		if(uao)
+			u2b=bsdconv_create("utf-8,ascii,byte:zhtw:big5,cp950_trans,uao,ascii,3f");
+		else
+			u2b=bsdconv_create("utf-8,ascii,byte:zhtw:big5,cp950_trans,ascii,3f");
 		if(pad)
 			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw");
 		else
@@ -204,9 +213,10 @@ static void
 usage(void)
 {
 	(void)fprintf(stderr,
-	    "usage: bug5 [-ps] [command ...]\n"
+	    "usage: bug5 [-psu] [command ...]\n"
 	    "\t -p\tpad ambiguous-width characters\n"
 	    "\t -s\tconversion for simplified chinese\n"
+	    "\t -u\tallow using UAO\n"
 		);
 	exit(1);
 }
