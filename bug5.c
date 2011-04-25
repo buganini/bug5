@@ -74,20 +74,56 @@ main(int argc, char *argv[])
 	int flushtime = 30;
 	struct bsdconv_instance *b2u;
 	struct bsdconv_instance *u2b;
-	int pad=0;
-	int zhcn=0;
-	int uao=0;
-
-	while ((ch = getopt(argc, argv, "psu")) != -1)
+	int sw=0;
+	char *_u2b[]={
+	/*      */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,ascii,nul,3f",
+	/*    p */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,ascii,nul,3f",
+	/*   u  */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,uao241,ascii,nul,3f",
+	/*   up */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,uao241,ascii,nul,3f",
+	/*  s   */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,ascii,nul,3f",
+	/*  s p */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,ascii,nul,3f",
+	/*  su  */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,uao241,ascii,nul,3f",
+	/*  sup */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,uao241,ascii,nul,3f",
+	/* d    */		"utf-8,ascii,nul,byte:zhtw:bsdconv_info:big5,cp950_trans,ascii,nul,3f",
+	/* d  p */		"utf-8,ascii,nul,byte:zhtw:bsdconv_info:big5,cp950_trans,ascii,nul,3f",
+	/* d u  */		"utf-8,ascii,nul,byte:zhtw:bsdconv_info:big5,cp950_trans,uao241,ascii,nul,3f",
+	/* d up */		"utf-8,ascii,nul,byte:zhtw:bsdconv_info:big5,cp950_trans,uao241,ascii,nul,3f",
+	/* ds   */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:bsdconv_info:big5,cp950_trans,ascii,nul,3f",
+	/* ds p */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:bsdconv_info:big5,cp950_trans,ascii,nul,3f",
+	/* dsu  */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:bsdconv_info:big5,cp950_trans,uao241,ascii,nul,3f",
+	/* dsup */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:bsdconv_info:big5,cp950_trans,uao241,ascii,nul,3f"
+	};
+	char *_b2u[]={
+	/*      */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw",
+	/*    p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/*   u  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw",
+	/*   up */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/*  s   */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw",
+	/*  s p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/*  su  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw",
+	/*  sup */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/* d    */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw",
+	/* d  p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/* d u  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw",
+	/* d up */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/* ds   */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw",
+	/* ds p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/* dsu  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw",
+	/* dsup */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw"
+	};
+	while ((ch = getopt(argc, argv, "dpsu")) != -1)
 		switch(ch) {
+		case 'd':
+			sw |= 1<<3;
+			break;
 		case 'p':
-			pad = 1;
+			sw |= 1;
 			break;
 		case 's':
-			zhcn = 1;
+			sw |= 1<<2;
 			break;
 		case 'u':
-			uao = 1;
+			sw |= 1<<1;
 			break;
 		case '?':
 		default:
@@ -96,25 +132,8 @@ main(int argc, char *argv[])
 	argc -= optind;
 	argv += optind;
 
-	if(zhcn){
-		if(uao)
-			u2b=bsdconv_create("utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,uao241,ascii,nul,3f");
-		else
-			u2b=bsdconv_create("utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,ascii,nul,3f");
-		if(pad)
-			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw");
-		else
-			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw");
-	}else{
-		if(uao)
-			u2b=bsdconv_create("utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,uao241,ascii,nul,3f");
-		else
-			u2b=bsdconv_create("utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,ascii,nul,3f");
-		if(pad)
-			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw");
-		else
-			b2u=bsdconv_create("ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw");
-	}
+	u2b=bsdconv_create(_u2b[sw]);
+	b2u=bsdconv_create(_b2u[sw]);
 	if(b2u==NULL || u2b==NULL){
 		fprintf(stderr,"Failed creating bsdconv instance, you may need to update bsdconv.\n");
 		if(b2u!=NULL) bsdconv_destroy(b2u);
@@ -214,6 +233,7 @@ usage(void)
 {
 	(void)fprintf(stderr,
 	    "usage: bug5 [-psu] [command ...]\n"
+	    "\t -d\tdisplay error counter when input magic sequence\n"
 	    "\t -p\tpad ambiguous-width characters\n"
 	    "\t -s\tconversion for simplified chinese\n"
 	    "\t -u\tallow using UAO\n"
