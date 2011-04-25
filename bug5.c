@@ -247,6 +247,7 @@ doshell(char **av)
 		shell = _PATH_BSHELL;
 
 	(void)close(master);
+	setenv("LC_CTYPE","zh_TW.Big5",1);
 	login_tty(slave);
 	if (av[0]) {
 		execvp(av[0], av);
