@@ -286,12 +286,16 @@ static void
 usage(void)
 {
 	(void)fprintf(stderr,
-	    "usage: bug5 [-dptu] [command ...]\n"
+	    "usage: bug5 [-dgptu] [-i conversion] [-o conversion] [-l locale] [command ...]\n"
 	    "\t -d\tdisplay error counter when input magic sequence\n"
+	    "\t -g\tGBK based profile\n"
 	    "\t -p\tpad ambiguous-width characters\n"
 	    "\t -t\tconversion for traditional/simplified chinese\n"
-	    "\t -u\tallow using UAO\n"
-		);
+	    "\t -u\tallow using UAO (no operation with -g)\n"
+	    "\t -i\tspecify input convertion\n"
+	    "\t -o\tspecify output convertion\n"
+	    "\t -l\tset LC_CTYPE before executing program\n"
+	);
 	exit(1);
 }
 
