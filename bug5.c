@@ -76,6 +76,7 @@ main(int argc, char *argv[])
 	struct bsdconv_instance *b2u;
 	struct bsdconv_instance *u2b;
 	int sw=0;
+	char *icv=NULL, *ocv=NULL;
 	char *_u2b[]={
 	/*       */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,ascii,nul,3f",
 	/*     p */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,ascii,nul,3f",
@@ -145,7 +146,8 @@ main(int argc, char *argv[])
 	/* gdtup */		"gbk,ascii:zhtw:zhtw_words:ambiguous-pad:utf-8,ascii"
 	};
 	locale="zh_TW.Big5";
-	while ((ch = getopt(argc, argv, "dgptu")) != -1)
+	
+	while ((ch = getopt(argc, argv, "dgptui:o:l:")) != -1)
 		switch(ch) {
 		case 'p':
 			sw |= 1;
@@ -163,6 +165,15 @@ main(int argc, char *argv[])
 			sw |= 1<<4;
 			locale="zh_CN.GBK";
 			break;
+		case 'i':
+			icv=optarg;
+			break;
+		case 'o':
+			ocv=optarg;
+			break;
+		case 'l':
+			locale=optarg;
+			break;
 		case '?':
 		default:
 			usage();
@@ -170,8 +181,13 @@ main(int argc, char *argv[])
 	argc -= optind;
 	argv += optind;
 
-	u2b=bsdconv_create(_u2b[sw]);
-	b2u=bsdconv_create(_b2u[sw]);
+	if(icv==NULL)
+		icv=_u2b[sw];
+	if(ocv==NULL)
+		ocv=_b2u[sw];
+
+	u2b=bsdconv_create(icv);
+	b2u=bsdconv_create(ocv);
 	if(b2u==NULL || u2b==NULL){
 		fprintf(stderr,"Failed creating bsdconv instance, you may need to update bsdconv.\n");
 		if(b2u!=NULL) bsdconv_destroy(b2u);
