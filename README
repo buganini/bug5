@@ -3,6 +3,7 @@ It's modified from script(1).
 
 Features that screen doesn't have:
 	UAO
+	Unpad padded ambiguous-width characters
 	ANSI-Broken Big5 (eg. Double Color) fixing
 	Optional Traditional-Simplified conversion
 	BSD License
