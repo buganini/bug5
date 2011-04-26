@@ -1,4 +1,4 @@
-bug5 is a Big5 <-> UTF-8 translating layer in terminal.
+bug5 is a Big5/GBK <-> UTF-8 translating layer in terminal.
 It's modified from script(1).
 
 Features that screen doesn't have:
@@ -14,7 +14,7 @@ Features that both bug5 and screen has:
 
 
 Dependency:
-	bsdconv-4.5+
+	bsdconv-4.7+
 
 Examples:
 	bug5 -u ssh bbs@ptt.cc #for CJK-aware terminal
