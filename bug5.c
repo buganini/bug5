@@ -47,6 +47,7 @@
 #include <unistd.h>
 #include <bsdconv.h>
 
+char *locale;
 static int master, slave;
 static int child;
 static int qflg, ttyflg;
@@ -76,54 +77,91 @@ main(int argc, char *argv[])
 	struct bsdconv_instance *u2b;
 	int sw=0;
 	char *_u2b[]={
-	/*      */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,ascii,nul,3f",
-	/*    p */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,ascii,nul,3f",
-	/*   u  */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,uao241,ascii,nul,3f",
-	/*   up */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,uao241,ascii,nul,3f",
-	/*  s   */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,ascii,nul,3f",
-	/*  s p */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,ascii,nul,3f",
-	/*  su  */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,uao241,ascii,nul,3f",
-	/*  sup */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,uao241,ascii,nul,3f",
-	/* d    */		"utf-8,ascii,nul,byte:zhtw:bsdconv_info:big5,cp950_trans,ascii,nul,3f",
-	/* d  p */		"utf-8,ascii,nul,byte:zhtw:bsdconv_info:big5,cp950_trans,ascii,nul,3f",
-	/* d u  */		"utf-8,ascii,nul,byte:zhtw:bsdconv_info:big5,cp950_trans,uao241,ascii,nul,3f",
-	/* d up */		"utf-8,ascii,nul,byte:zhtw:bsdconv_info:big5,cp950_trans,uao241,ascii,nul,3f",
-	/* ds   */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:bsdconv_info:big5,cp950_trans,ascii,nul,3f",
-	/* ds p */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:bsdconv_info:big5,cp950_trans,ascii,nul,3f",
-	/* dsu  */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:bsdconv_info:big5,cp950_trans,uao241,ascii,nul,3f",
-	/* dsup */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:bsdconv_info:big5,cp950_trans,uao241,ascii,nul,3f"
+	/*       */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,ascii,nul,3f",
+	/*     p */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,ascii,nul,3f",
+	/*    u  */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,uao241,ascii,nul,3f",
+	/*    up */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,uao241,ascii,nul,3f",
+	/*   t   */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,ascii,nul,3f",
+	/*   t p */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,ascii,nul,3f",
+	/*   tu  */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,uao241,ascii,nul,3f",
+	/*   tup */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:big5,cp950_trans,uao241,ascii,nul,3f",
+	/*  d    */		"utf-8,ascii,nul,byte:zhtw:bsdconv_info:big5,cp950_trans,ascii,nul,3f",
+	/*  d  p */		"utf-8,ascii,nul,byte:zhtw:bsdconv_info:big5,cp950_trans,ascii,nul,3f",
+	/*  d u  */		"utf-8,ascii,nul,byte:zhtw:bsdconv_info:big5,cp950_trans,uao241,ascii,nul,3f",
+	/*  d up */		"utf-8,ascii,nul,byte:zhtw:bsdconv_info:big5,cp950_trans,uao241,ascii,nul,3f",
+	/*  dt   */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:bsdconv_info:big5,cp950_trans,ascii,nul,3f",
+	/*  dt p */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:bsdconv_info:big5,cp950_trans,ascii,nul,3f",
+	/*  dtu  */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:bsdconv_info:big5,cp950_trans,uao241,ascii,nul,3f",
+	/*  dtup */		"utf-8,ascii,nul,byte:zhtw:zhtw_words:bsdconv_info:big5,cp950_trans,uao241,ascii,nul,3f"
+	/* g     */		"utf-8,ascii,nul,byte:zhcn:gbk,cp936_trans,ascii,nul,3f",
+	/* g   p */		"utf-8,ascii,nul,byte:zhcn:gbk,cp936_trans,ascii,nul,3f",
+	/* g  u  */		"utf-8,ascii,nul,byte:zhcn:gbk,cp936_trans,ascii,nul,3f",
+	/* g  up */		"utf-8,ascii,nul,byte:zhcn:gbk,cp936_trans,ascii,nul,3f",
+	/* g t   */		"utf-8,ascii,nul,byte:zhcn:gbk,cp936_trans,ascii,nul,3f",
+	/* g t p */		"utf-8,ascii,nul,byte:zhcn:gbk,cp936_trans,ascii,nul,3f",
+	/* g tu  */		"utf-8,ascii,nul,byte:zhcn:gbk,cp936_trans,ascii,nul,3f",
+	/* g tup */		"utf-8,ascii,nul,byte:zhcn:gbk,cp936_trans,ascii,nul,3f",
+	/* gd    */		"utf-8,ascii,nul,byte:zhcn:bsdconv_info:gbk,cp936_trans,ascii,nul,3f",
+	/* gd  p */		"utf-8,ascii,nul,byte:zhcn:bsdconv_info:gbk,cp936_trans,ascii,nul,3f",
+	/* gd u  */		"utf-8,ascii,nul,byte:zhcn:bsdconv_info:gbk,cp936_trans,ascii,nul,3f",
+	/* gd up */		"utf-8,ascii,nul,byte:zhcn:bsdconv_info:gbk,cp936_trans,ascii,nul,3f",
+	/* gdt   */		"utf-8,ascii,nul,byte:zhcn:bsdconv_info:gbk,cp936_trans,ascii,nul,3f",
+	/* gdt p */		"utf-8,ascii,nul,byte:zhcn:bsdconv_info:gbk,cp936_trans,ascii,nul,3f",
+	/* gdtu  */		"utf-8,ascii,nul,byte:zhcn:bsdconv_info:gbk,cp936_trans,ascii,nul,3f",
+	/* gdtup */		"utf-8,ascii,nul,byte:zhcn:bsdconv_info:gbk,cp936_trans,ascii,nul,3f"
 	};
 	char *_b2u[]={
-	/*      */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw",
-	/*    p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw",
-	/*   u  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw",
-	/*   up */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw",
-	/*  s   */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw",
-	/*  s p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw",
-	/*  su  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw",
-	/*  sup */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw",
-	/* d    */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw",
-	/* d  p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw",
-	/* d u  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw",
-	/* d up */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw",
-	/* ds   */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw",
-	/* ds p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw",
-	/* dsu  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw",
-	/* dsup */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw"
+	/*       */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw",
+	/*     p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/*    u  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw",
+	/*    up */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/*   t   */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw",
+	/*   t p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/*   tu  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw",
+	/*   tup */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/*  d    */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw",
+	/*  d  p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/*  d u  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:utf-8,ascii,bsdconv_raw",
+	/*  d up */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/*  dt   */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw",
+	/*  dt p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw",
+	/*  dtu  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:utf-8,ascii,bsdconv_raw",
+	/*  dtup */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5,ascii:zhcn:ambiguous-pad:utf-8,ascii,bsdconv_raw"
+	/* g     */		"gbk,ascii:utf-8,ascii",
+	/* g   p */		"gbk,ascii:ambiguous-pad:utf-8,ascii",
+	/* g  u  */		"gbk,ascii:utf-8,ascii",
+	/* g  up */		"gbk,ascii:ambiguous-pad:utf-8,ascii",
+	/* g t   */		"gbk,ascii:zhtw:zhtw_words:utf-8,ascii",
+	/* g t p */		"gbk,ascii:zhtw:zhtw_words:ambiguous-pad:utf-8,ascii",
+	/* g tu  */		"gbk,ascii:zhtw:zhtw_words:utf-8,ascii",
+	/* g tup */		"gbk,ascii:zhtw:zhtw_words:ambiguous-pad:utf-8,ascii",
+	/* gd    */		"gbk,ascii:utf-8,ascii",
+	/* gd  p */		"gbk,ascii:ambiguous-pad:utf-8,ascii",
+	/* gd u  */		"gbk,ascii:utf-8,ascii",
+	/* gd up */		"gbk,ascii:ambiguous-pad:utf-8,ascii",
+	/* gdt   */		"gbk,ascii:zhtw:zhtw_words:utf-8,ascii",
+	/* gdt p */		"gbk,ascii:zhtw:zhtw_words:ambiguous-pad:utf-8,ascii",
+	/* gdtu  */		"gbk,ascii:zhtw:zhtw_words:utf-8,ascii",
+	/* gdtup */		"gbk,ascii:zhtw:zhtw_words:ambiguous-pad:utf-8,ascii"
 	};
-	while ((ch = getopt(argc, argv, "dpsu")) != -1)
+	locale="zh_TW.Big5";
+	while ((ch = getopt(argc, argv, "dgptu")) != -1)
 		switch(ch) {
-		case 'd':
-			sw |= 1<<3;
-			break;
 		case 'p':
 			sw |= 1;
 			break;
-		case 's':
-			sw |= 1<<2;
-			break;
 		case 'u':
 			sw |= 1<<1;
+			break;
+		case 't':
+			sw |= 1<<2;
+			break;
+		case 'd':
+			sw |= 1<<3;
+			break;
+		case 'g':
+			sw |= 1<<4;
+			locale="zh_CN.GBK";
 			break;
 		case '?':
 		default:
@@ -232,10 +270,10 @@ static void
 usage(void)
 {
 	(void)fprintf(stderr,
-	    "usage: bug5 [-psu] [command ...]\n"
+	    "usage: bug5 [-dptu] [command ...]\n"
 	    "\t -d\tdisplay error counter when input magic sequence\n"
 	    "\t -p\tpad ambiguous-width characters\n"
-	    "\t -s\tconversion for simplified chinese\n"
+	    "\t -t\tconversion for traditional/simplified chinese\n"
 	    "\t -u\tallow using UAO\n"
 		);
 	exit(1);
@@ -267,7 +305,7 @@ doshell(char **av)
 		shell = _PATH_BSHELL;
 
 	(void)close(master);
-	setenv("LC_CTYPE","zh_TW.Big5",1);
+	setenv("LC_CTYPE",locale,1);
 	login_tty(slave);
 	if (av[0]) {
 		execvp(av[0], av);
