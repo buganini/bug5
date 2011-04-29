@@ -77,6 +77,7 @@ main(int argc, char *argv[])
 	struct bsdconv_instance *u2b;
 	int sw=0;
 	char *icv=NULL, *ocv=NULL;
+	int cus_i=0, cus_o=0;
 	char *_u2b[]={
 	/*       */		"utf-8,ascii,nul,byte:zhtw:big5,cp950_trans,ascii,nul,3f",
 	/*     p */		"utf-8,ascii,nul,byte:zhtw:ambiguous-unpad:big5,cp950_trans,ascii,nul,3f",
@@ -167,9 +168,11 @@ main(int argc, char *argv[])
 			break;
 		case 'i':
 			icv=optarg;
+			cus_i=1;
 			break;
 		case 'o':
 			ocv=optarg;
+			cus_o=1;
 			break;
 		case 'l':
 			locale=optarg;
@@ -187,11 +190,22 @@ main(int argc, char *argv[])
 		ocv=_b2u[sw];
 
 	u2b=bsdconv_create(icv);
+	if(u2b==NULL){
+		if(cus_i){
+			fprintf(stderr, "Failed:  %s: %s\n", bsdconv_error(), icv);
+		}else{
+			fprintf(stderr,"Failed creating bsdconv instance, you may need to update bsdconv.\n");
+		}
+		exit(1);
+	}
 	b2u=bsdconv_create(ocv);
-	if(b2u==NULL || u2b==NULL){
-		fprintf(stderr,"Failed creating bsdconv instance, you may need to update bsdconv.\n");
-		if(b2u!=NULL) bsdconv_destroy(b2u);
-		if(u2b!=NULL) bsdconv_destroy(u2b);
+	if(b2u==NULL){
+		if(cus_o){
+			fprintf(stderr, "Failed:  %s: %s\n", bsdconv_error(), ocv);
+		}else{
+			fprintf(stderr,"Failed creating bsdconv instance, you may need to update bsdconv.\n");
+		}
+		bsdconv_destroy(u2b);
 		exit(1);
 	}
 	bsdconv_init(b2u);
