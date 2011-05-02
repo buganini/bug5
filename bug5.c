@@ -59,6 +59,8 @@ static void doshell(char **);
 static void fail(void);
 static void finish(void);
 static void usage(void);
+void sigforwarder(int);
+void winchforwarder(int);
 
 int
 main(int argc, char *argv[])
@@ -146,6 +148,15 @@ main(int argc, char *argv[])
 	/* gdtu  */		"gbk,ascii:zhtw:zhtw_words:utf-8,ascii",
 	/* gdtup */		"gbk,ascii:zhtw:zhtw_words:ambiguous-pad:utf-8,ascii"
 	};
+
+	signal(SIGINT, &sigforwarder);
+	signal(SIGQUIT, &sigforwarder);
+	signal(SIGPIPE, &sigforwarder);
+	signal(SIGINFO, &sigforwarder);
+	signal(SIGUSR1, &sigforwarder);
+	signal(SIGUSR2, &sigforwarder);
+	signal(SIGWINCH, &winchforwarder);
+
 	locale="zh_TW.Big5";
 	
 	while ((ch = getopt(argc, argv, "dgptui:o:l:")) != -1)
@@ -295,6 +306,24 @@ main(int argc, char *argv[])
 	finish();
 	done(0);
 }
+
+void
+sigforwarder(int sig)
+{
+	if(child)
+		kill(child, sig);
+}
+
+void
+winchforwarder(int sig)
+{
+	struct winsize win;
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &win);
+	ioctl(master, TIOCSWINSZ, &win);
+	if(child)
+		kill(child, sig);	
+}
+
 
 static void
 usage(void)
