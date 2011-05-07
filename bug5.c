@@ -54,6 +54,9 @@ static int qflg, ttyflg;
 
 static struct termios tt;
 
+static struct bsdconv_instance *b2u;
+static struct bsdconv_instance *u2b;
+
 static void done(int) __dead2;
 static void doshell(char **);
 static void fail(void);
@@ -75,8 +78,6 @@ main(int argc, char *argv[])
 	char ibuf[BUFSIZ];
 	fd_set rfd;
 	int flushtime = 30;
-	struct bsdconv_instance *b2u;
-	struct bsdconv_instance *u2b;
 	int sw=0;
 	char *icv=NULL, *ocv=NULL;
 	int cus_i=0, cus_o=0;
@@ -357,6 +358,8 @@ done(int eno)
 	if (ttyflg)
 		(void)tcsetattr(STDIN_FILENO, TCSAFLUSH, &tt);
 	tvec = time(NULL);
+	bsdconv_destroy(b2u);
+	bsdconv_destroy(u2b);
 	(void)close(master);
 	exit(eno);
 }
