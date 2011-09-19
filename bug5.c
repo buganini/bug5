@@ -379,5 +379,6 @@ done(int eno)
 	bsdconv_destroy(b2u);
 	bsdconv_destroy(u2b);
 	(void)close(master);
+	write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[r"));
 	exit(eno);
 }
