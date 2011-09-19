@@ -318,7 +318,7 @@ usage(void)
 	    "\t -i\tspecify input conversion\n"
 	    "\t -o\tspecify output conversion\n"
 	    "\t -l\tset LC_CTYPE before executing program\n"
-	    "\t -s\t[col]x[row] terminal size, 0=auto\n"
+	    "\t -s\tterminal size (eg. 80x24), 0=auto\n"
 	);
 	exit(1);
 }
