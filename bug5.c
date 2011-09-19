@@ -65,6 +65,8 @@ static void usage(void);
 void sigforwarder(int);
 void winchforwarder(int);
 
+int col=0, row=0;
+
 int
 main(int argc, char *argv[])
 {
@@ -120,7 +122,7 @@ main(int argc, char *argv[])
 
 	locale="zh_TW.Big5";
 	
-	while ((ch = getopt(argc, argv, "gptui:o:l:")) != -1)
+	while ((ch = getopt(argc, argv, "gptui:o:l:s:")) != -1)
 		switch(ch) {
 		case 'p':
 			sw |= 1;
@@ -145,6 +147,9 @@ main(int argc, char *argv[])
 			break;
 		case 'l':
 			locale=optarg;
+			break;
+		case 's':
+			sscanf(optarg, "%dx%d", &col, &row);
 			break;
 		case '?':
 		default:
@@ -185,6 +190,10 @@ main(int argc, char *argv[])
 			err(1, "tcgetattr");
 		if (ioctl(STDIN_FILENO, TIOCGWINSZ, &win) == -1)
 			err(1, "ioctl");
+		if(col!=0)
+			win.ws_col=col;
+		if(row!=0)
+			win.ws_row=row;
 		if (openpty(&master, &slave, NULL, &tt, &win) == -1)
 			err(1, "openpty");
 	} else {
@@ -282,6 +291,10 @@ winchforwarder(int sig)
 {
 	struct winsize win;
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &win);
+	if(col!=0)
+		win.ws_col=col;
+	if(row!=0)
+		win.ws_row=row;
 	ioctl(master, TIOCSWINSZ, &win);
 	kill(child, sig);	
 }
@@ -299,6 +312,7 @@ usage(void)
 	    "\t -i\tspecify input conversion\n"
 	    "\t -o\tspecify output conversion\n"
 	    "\t -l\tset LC_CTYPE before executing program\n"
+	    "\t -s\t[col]x[row] terminal size, 0=auto\n"
 	);
 	exit(1);
 }
