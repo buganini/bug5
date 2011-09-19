@@ -310,7 +310,7 @@ static void
 usage(void)
 {
 	(void)fprintf(stderr,
-	    "usage: bug5 [-gptu] [-i conversion] [-o conversion] [-l locale] [command ...]\n"
+	    "usage: bug5 [-gptus] [-i conversion] [-o conversion] [-l locale] [command ...]\n"
 	    "\t -g\tGBK based profile\n"
 	    "\t -p\tpad ambiguous-width characters\n"
 	    "\t -t\tconversion for traditional/simplified chinese\n"
