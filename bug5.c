@@ -66,18 +66,18 @@ void sigforwarder(int);
 void winchforwarder(int);
 
 int col=0, row=0;
+char obuf[BUFSIZ];
+char ibuf[BUFSIZ];
 
 int
 main(int argc, char *argv[])
 {
-	int cc;
+	int cc=0;
 	struct termios rtt;
 	struct winsize win;
 	int ch, n;
 	struct timeval tv, *tvp;
 	time_t tvec, start;
-	char obuf[BUFSIZ];
-	char ibuf[BUFSIZ];
 	fd_set rfd;
 	int flushtime = 30;
 	int sw=0;
@@ -194,6 +194,7 @@ main(int argc, char *argv[])
 			win.ws_col=col;
 		if(row!=0)
 			win.ws_row=row;
+		cc=win.ws_row;
 		if (openpty(&master, &slave, NULL, &tt, &win) == -1)
 			err(1, "openpty");
 	} else {
@@ -233,6 +234,10 @@ main(int argc, char *argv[])
 	else
 		tvp = NULL;
 
+	if(cc)
+		write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[%d;%dr", 1, cc));
+	else
+		write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[r"));
 	start = time(0);
 	FD_ZERO(&rfd);
 	for (;;) {
@@ -295,6 +300,7 @@ winchforwarder(int sig)
 		win.ws_col=col;
 	if(row!=0)
 		win.ws_row=row;
+	write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[%d;%dr", 1, win.ws_row));
 	ioctl(master, TIOCSWINSZ, &win);
 	kill(child, sig);	
 }
