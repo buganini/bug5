@@ -237,7 +237,7 @@ main(int argc, char *argv[])
 		write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[%d;%dr", 1, cc));
 	else
 		write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[r"));
-
+	write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[H\033[2J"));
 	for (;;) {
 		FD_ZERO(&rfd);
 		FD_SET(master, &rfd);
@@ -388,5 +388,6 @@ done(int eno)
 	bsdconv_destroy(u2b);
 	(void)close(master);
 	write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[r"));
+	write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[H\033[2J"));
 	exit(eno);
 }
