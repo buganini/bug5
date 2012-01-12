@@ -384,6 +384,8 @@ static void
 done(int eno)
 {
 	time_t tvec;
+	struct winsize win;
+	int i;
 
 	if (ttyflg)
 		(void)tcsetattr(STDIN_FILENO, TCSAFLUSH, &tt);
@@ -392,6 +394,9 @@ done(int eno)
 	bsdconv_destroy(u2b);
 	(void)close(master);
 	write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[r"));
-	write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[H\033[2J"));
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &win);
+	write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[%dH", win.ws_row));
+	for(i=0;i<win.ws_row;++i)
+		putchar('\n');
 	exit(eno);
 }
