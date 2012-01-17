@@ -150,7 +150,8 @@ main(int argc, char *argv[])
 			locale=optarg;
 			break;
 		case 's':
-			sscanf(optarg, "%dx%d", &col, &row);
+			if(sscanf(optarg, "%dx%d", &col, &row)!=2)
+				usage();
 			break;
 		case '?':
 		default:
