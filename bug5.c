@@ -37,7 +37,14 @@
 #include <err.h>
 #include <errno.h>
 #include <fcntl.h>
+#ifdef __linux
+#define __dead2 __attribute__ ((noreturn))
+#include <pty.h>
+#include <time.h>
+#include <utmp.h>
+#else
 #include <libutil.h>
+#endif
 #include <paths.h>
 #include <signal.h>
 #include <stdio.h>
@@ -226,7 +233,9 @@ main(int argc, char *argv[])
 	signal(SIGINT, &sigforwarder);
 	signal(SIGQUIT, &sigforwarder);
 	signal(SIGPIPE, &sigforwarder);
+#ifndef __linux
 	signal(SIGINFO, &sigforwarder);
+#endif
 	signal(SIGUSR1, &sigforwarder);
 	signal(SIGUSR2, &sigforwarder);
 	signal(SIGWINCH, &winchforwarder);
