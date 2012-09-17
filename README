@@ -23,8 +23,8 @@ Examples:
 	bug5 -gpt telnet -8 newsmth.net
 	bug5 -up -s 80x24 telnet -8 bbs.hs.ntnu.edu.tw
 
-	#no encoding conversion, only padding for ambiguous-width characters
-	bug5 -l en_US.UTF-8 -i utf-8:ambiguous-unpad:utf-8 -o utf-8:ambiguous-pad:utf-8
+	#I/O with UTF-8, with padding for ambiguous-width characters
+	bug5 -8p
 
 See Also:
 	https://github.com/buganini/misc-scripts/blob/master/noidle
