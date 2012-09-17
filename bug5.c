@@ -347,7 +347,8 @@ static void
 usage(void)
 {
 	(void)fprintf(stderr,
-	    "usage: bug5 [-gptus] [-i conversion] [-o conversion] [-l locale] [command ...]\n"
+	    "usage: bug5 [-8gptus] [-i conversion] [-o conversion] [-l locale] [command ...]\n"
+	    "\t -8\tUTF-8 based profile\n"
 	    "\t -g\tGBK based profile\n"
 	    "\t -p\tpad ambiguous-width characters\n"
 	    "\t -t\tconversion for traditional/simplified chinese\n"
@@ -410,7 +411,6 @@ done(int eno)
 {
 	time_t tvec;
 	struct winsize win;
-	int i;
 
 	if (ttyflg)
 		(void)tcsetattr(STDIN_FILENO, TCSAFLUSH, &tt);
@@ -421,7 +421,6 @@ done(int eno)
 	write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[r"));
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &win);
 	write(STDOUT_FILENO, obuf, sprintf(obuf, "\033[%dH", win.ws_row));
-	for(i=0;i<win.ws_row;++i)
-		putchar('\n');
+	putchar('\n');
 	exit(eno);
 }
