@@ -91,6 +91,7 @@ main(int argc, char *argv[])
 	int sw=0;
 	char *icv=NULL, *ocv=NULL;
 	int cus_i=0, cus_o=0;
+	char utf8=0;
 	char *_u2b[]={
 	/*      */		"utf-8,nul,byte:zhtw:big5,cp950_trans,nul,3f",
 	/*    p */		"utf-8,nul,byte:zhtw:ambiguous-unpad:big5,cp950_trans,nul,3f",
@@ -130,8 +131,12 @@ main(int argc, char *argv[])
 
 	locale="zh_TW.Big5";
 
-	while ((ch = getopt(argc, argv, "gptui:o:l:s:")) != -1)
+	while ((ch = getopt(argc, argv, "gptu8i:o:l:s:")) != -1)
 		switch(ch) {
+		case '8':
+			utf8=1;
+			locale="en_US.UTF-8";
+			break;
 		case 'p':
 			sw |= 1;
 			break;
@@ -171,6 +176,16 @@ main(int argc, char *argv[])
 		icv=_u2b[sw];
 	if(ocv==NULL)
 		ocv=_b2u[sw];
+
+	if(utf8){
+		if(sw & 1){
+			icv="utf-8,nul:ambiguous-unpad:utf-8,null";
+			ocv="utf-8,nul:ambiguous-pad:utf-8,null";
+		}else{
+			icv="utf-8,nul:utf-8,null";
+			ocv="utf-8,nul:utf-8,null";
+		}
+	}
 
 	u2b=bsdconv_create(icv);
 	if(u2b==NULL){
