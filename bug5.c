@@ -179,11 +179,11 @@ main(int argc, char *argv[])
 
 	if(utf8){
 		if(sw & 1){
-			icv="utf-8,nul:ambiguous-unpad:utf-8,null";
-			ocv="utf-8,nul:ambiguous-pad:utf-8,null";
+			icv="utf-8,00:ambiguous-unpad:utf-8,00";
+			ocv="utf-8:ambiguous-pad:utf-8";
 		}else{
-			icv="utf-8,nul:utf-8,null";
-			ocv="utf-8,nul:utf-8,null";
+			icv="utf-8,00:utf-8,00";
+			ocv="utf-8:utf-8";
 		}
 	}
 
