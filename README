@@ -15,7 +15,7 @@ Features that both bug5 and screen has:
 	Specify I/O conversion
 
 Dependency:
-	bsdconv-4.7+
+	bsdconv
 
 Examples:
 	bug5 -u ssh bbs@ptt.cc #for CJK-aware terminal
