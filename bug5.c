@@ -131,6 +131,8 @@ main(int argc, char *argv[])
 
 	locale="zh_TW.Big5";
 
+	char *posixly_correct=getenv("POSIXLY_CORRECT");
+	setenv("POSIXLY_CORRECT","",1);
 	while ((ch = getopt(argc, argv, "gptu8i:o:l:s:")) != -1)
 		switch(ch) {
 		case '8':
@@ -171,6 +173,10 @@ main(int argc, char *argv[])
 		}
 	argc -= optind;
 	argv += optind;
+	if(posixly_correct)
+		setenv("POSIXLY_CORRECT",posixly_correct,1);
+	else
+		unsetenv("POSIXLY_CORRECT");
 
 	if(icv==NULL)
 		icv=_u2b[sw];
