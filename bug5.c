@@ -111,14 +111,14 @@ main(int argc, char *argv[])
 	/* gtup */		"utf-8,00,byte:zhcn:ambiguous-unpad:gbk,cp936_trans,00,3f",
 	};
 	char *_b2u[]={
-	/*      */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:utf-8,bsdconv_raw",
-	/*    p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:ambiguous-pad:utf-8,bsdconv_raw",
-	/*   u  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:utf-8,bsdconv_raw",
-	/*   up */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:ambiguous-pad:utf-8,bsdconv_raw",
-	/*  t   */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:zhcn:utf-8,bsdconv_raw",
-	/*  t p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:zhcn:ambiguous-pad:utf-8,bsdconv_raw",
-	/*  tu  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:zhcn:utf-8,bsdconv_raw",
-	/*  tup */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:zhcn:ambiguous-pad:utf-8,bsdconv_raw",
+	/*      */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:utf-8,pass#filter=1b",
+	/*    p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:ambiguous-pad:utf-8,pass#filter=1b",
+	/*   u  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:utf-8,pass#filter=1b",
+	/*   up */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:ambiguous-pad:utf-8,pass#filter=1b",
+	/*  t   */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:zhcn:utf-8,pass#filter=1b",
+	/*  t p */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:zhcn:ambiguous-pad:utf-8,pass#filter=1b",
+	/*  tu  */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:zhcn:utf-8,pass#filter=1b",
+	/*  tup */		"ansi-control,byte:big5-defrag:byte,ansi-control|skip,big5:zhcn:ambiguous-pad:utf-8,pass#filter=1b",
 	/* g    */		"gbk:utf-8",
 	/* g  p */		"gbk:ambiguous-pad:utf-8",
 	/* g u  */		"gbk:utf-8",
@@ -415,12 +415,10 @@ fail(void)
 static void
 done(int eno)
 {
-	time_t tvec;
 	struct winsize win;
 
 	if (ttyflg)
 		(void)tcsetattr(STDIN_FILENO, TCSAFLUSH, &tt);
-	tvec = time(NULL);
 	bsdconv_destroy(b2u);
 	bsdconv_destroy(u2b);
 	(void)close(master);
