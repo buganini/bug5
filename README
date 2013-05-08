@@ -19,7 +19,8 @@ Dependency:
 
 Examples:
 	bug5 -u ssh bbs@ptt.cc #for CJK-aware terminal
-	bug5 -ptu ssh bbs@ptt.cc #with ":cjkwidth on" in screen
+	bug5 -up ssh bbs@ptt.cc #auto pad ambiguous-width characters padding
+	bug5 -upp ssh bbs@ptt.cc #always pad ambiguous-width characters padding
 	bug5 -gpt telnet -8 newsmth.net
 	bug5 -up -s 80x24 telnet -8 bbs.hs.ntnu.edu.tw
 
