@@ -11,7 +11,7 @@ Features that screen doesn't have:
 	Specifying size for slave terminal + auto scrolling region setting
 
 Features that both bug5 and screen has:
-	Optional ambiguous-width characters padding
+	Optional (no/auto/always) ambiguous-width characters padding
 	Specify I/O conversion
 
 Dependency:

@@ -71,7 +71,9 @@ static void finish(void);
 static void usage(void);
 void sigforwarder(int);
 void winchforwarder(int);
+void detect_ambipad(void);
 
+char ambipad=0;
 int col=0, row=0;
 char obuf[BUFSIZ];
 char ibuf[BUFSIZ];
@@ -141,6 +143,8 @@ main(int argc, char *argv[])
 			break;
 		case 'p':
 			sw |= 1;
+			if(ambipad<2);
+				ambipad+=1;
 			break;
 		case 'u':
 			sw |= 1<<1;
@@ -198,7 +202,7 @@ main(int argc, char *argv[])
 		if(cus_i){
 			fprintf(stderr, "Failed:  %s: %s\n", bsdconv_error(), icv);
 		}else{
-			fprintf(stderr,"Failed creating bsdconv instance, you may need to update bsdconv.\n");
+			fprintf(stderr,"Failed creating bsdconv instance, please make sure you are running latest release of bug5 and bsdconv.\n");
 		}
 		exit(1);
 	}
@@ -207,7 +211,7 @@ main(int argc, char *argv[])
 		if(cus_o){
 			fprintf(stderr, "Failed:  %s: %s\n", bsdconv_error(), ocv);
 		}else{
-			fprintf(stderr,"Failed creating bsdconv instance, you may need to update bsdconv.\n");
+			fprintf(stderr,"Failed creating bsdconv instance, please make sure you are running latest release of bug5 and bsdconv.\n");
 		}
 		bsdconv_destroy(u2b);
 		exit(1);
@@ -250,6 +254,8 @@ main(int argc, char *argv[])
 	if (child == 0)
 		doshell(argv);
 	close(slave);
+
+	detect_ambipad();
 
 	signal(SIGINT, &sigforwarder);
 	signal(SIGQUIT, &sigforwarder);
@@ -338,6 +344,9 @@ void
 winchforwarder(int sig)
 {
 	struct winsize win;
+
+	detect_ambipad();
+
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &win);
 	if(col!=0)
 		win.ws_col=col;
@@ -349,6 +358,33 @@ winchforwarder(int sig)
 }
 
 
+void
+detect_ambipad(void){
+	int r, c, r0, c0, r1, c1;
+	if(ambipad==1){
+		printf("\033[6n");
+		fflush(stdout);
+		scanf("\033[%d;%dR", &r, &c);
+		printf("\033[H\033[6n");
+		fflush(stdout);
+		scanf("\033[%d;%dR", &r0, &c0);
+		printf("\xe2\x96\xbd");
+		printf("\033[6n");
+		fflush(stdout);
+		scanf("\033[%d;%dR", &r1, &c1);
+		printf("\033[H \033[%d;%dH", r, c);
+
+		r=c1-c0;
+		if(r==1){
+			bsdconv_ctl(b2u, BSDCONV_AMBIGUOUS_PAD, NULL, 1);
+			bsdconv_ctl(u2b, BSDCONV_AMBIGUOUS_PAD, NULL, 1);
+		}else if(r==2){
+			bsdconv_ctl(b2u, BSDCONV_AMBIGUOUS_PAD, NULL, 0);
+			bsdconv_ctl(u2b, BSDCONV_AMBIGUOUS_PAD, NULL, 0);
+		}
+	}
+}
+
 static void
 usage(void)
 {
@@ -356,7 +392,8 @@ usage(void)
 	    "usage: bug5 [-8gptus] [-i conversion] [-o conversion] [-l locale] [command ...]\n"
 	    "\t -8\tUTF-8 based profile\n"
 	    "\t -g\tGBK based profile\n"
-	    "\t -p\tpad ambiguous-width characters\n"
+	    "\t -p\tauto pad ambiguous-width characters\n"
+	    "\t -pp\talways pad ambiguous-width characters\n"
 	    "\t -t\tconversion for traditional/simplified chinese\n"
 	    "\t -u\tallow using UAO (no operation with -g)\n"
 	    "\t -i\tspecify input conversion\n"
