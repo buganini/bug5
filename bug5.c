@@ -372,7 +372,7 @@ detect_ambipad(void){
 		printf("\033[6n");
 		fflush(stdout);
 		scanf("\033[%d;%dR", &r1, &c1);
-		printf("\033[H \033[%d;%dH", r, c);
+		printf("\033[H  \033[%d;%dH", r, c);
 
 		r=c1-c0;
 		if(r==1){
