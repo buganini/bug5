@@ -95,22 +95,22 @@ main(int argc, char *argv[])
 	int cus_i=0, cus_o=0;
 	char utf8=0;
 	char *_u2b[]={
-	/*      */		"utf-8,00,byte:zhtw:big5,cp950_trans,00,any#3f",
-	/*    p */		"utf-8,00,byte:zhtw:ambiguous-unpad:big5,cp950_trans,00,any#3f",
-	/*   u  */		"utf-8,00,byte:zhtw:big5,cp950_trans,uao,00,any#3f",
-	/*   up */		"utf-8,00,byte:zhtw:ambiguous-unpad:big5,cp950_trans,uao,00,any#3f",
-	/*  t   */		"utf-8,00,byte:zhtw:zhtw_words:big5,cp950_trans,00,any#3f",
-	/*  t p */		"utf-8,00,byte:zhtw:zhtw_words:ambiguous-unpad:big5,cp950_trans,00,any#3f",
-	/*  tu  */		"utf-8,00,byte:zhtw:zhtw_words:big5,cp950_trans,uao,00,any#3f",
-	/*  tup */		"utf-8,00,byte:zhtw:zhtw_words:ambiguous-unpad:big5,cp950_trans,uao,00,any#3f",
-	/* g    */		"utf-8,00,byte:zhcn:gbk,cp936_trans,00,any#3f",
-	/* g  p */		"utf-8,00,byte:zhcn:ambiguous-unpad:gbk,cp936_trans,00,any#3f",
-	/* g u  */		"utf-8,00,byte:zhcn:gbk,cp936_trans,00,any#3f",
-	/* g up */		"utf-8,00,byte:zhcn:ambiguous-unpad:gbk,cp936_trans,00,any#3f",
-	/* gt   */		"utf-8,00,byte:zhcn:gbk,cp936_trans,00,any#3f",
-	/* gt p */		"utf-8,00,byte:zhcn:ambiguous-unpad:gbk,cp936_trans,00,any#3f",
-	/* gtu  */		"utf-8,00,byte:zhcn:gbk,cp936_trans,00,any#3f",
-	/* gtup */		"utf-8,00,byte:zhcn:ambiguous-unpad:gbk,cp936_trans,00,any#3f",
+	/*      */		"utf-8,00,byte:zhtw:big5,cp950-trans,00,any#3f",
+	/*    p */		"utf-8,00,byte:zhtw:ambiguous-unpad:big5,cp950-trans,00,any#3f",
+	/*   u  */		"utf-8,00,byte:zhtw:big5,cp950-trans,uao,00,any#3f",
+	/*   up */		"utf-8,00,byte:zhtw:ambiguous-unpad:big5,cp950-trans,uao,00,any#3f",
+	/*  t   */		"utf-8,00,byte:zhtw:zhtw-words:big5,cp950-trans,00,any#3f",
+	/*  t p */		"utf-8,00,byte:zhtw:zhtw-words:ambiguous-unpad:big5,cp950-trans,00,any#3f",
+	/*  tu  */		"utf-8,00,byte:zhtw:zhtw-words:big5,cp950-trans,uao,00,any#3f",
+	/*  tup */		"utf-8,00,byte:zhtw:zhtw-words:ambiguous-unpad:big5,cp950-trans,uao,00,any#3f",
+	/* g    */		"utf-8,00,byte:zhcn:gbk,cp936-trans,00,any#3f",
+	/* g  p */		"utf-8,00,byte:zhcn:ambiguous-unpad:gbk,cp936-trans,00,any#3f",
+	/* g u  */		"utf-8,00,byte:zhcn:gbk,cp936-trans,00,any#3f",
+	/* g up */		"utf-8,00,byte:zhcn:ambiguous-unpad:gbk,cp936-trans,00,any#3f",
+	/* gt   */		"utf-8,00,byte:zhcn:gbk,cp936-trans,00,any#3f",
+	/* gt p */		"utf-8,00,byte:zhcn:ambiguous-unpad:gbk,cp936-trans,00,any#3f",
+	/* gtu  */		"utf-8,00,byte:zhcn:gbk,cp936-trans,00,any#3f",
+	/* gtup */		"utf-8,00,byte:zhcn:ambiguous-unpad:gbk,cp936-trans,00,any#3f",
 	};
 	char *_b2u[]={
 	/*      */		"ansi-control,byte:big5-defrag:byte,pass#mark&for=1b|pass#unmark,big5:utf-8,pass#for=1b",
@@ -125,10 +125,10 @@ main(int argc, char *argv[])
 	/* g  p */		"gbk:ambiguous-pad:utf-8",
 	/* g u  */		"gbk:utf-8",
 	/* g up */		"gbk:ambiguous-pad:utf-8",
-	/* gt   */		"gbk:zhtw:zhtw_words:utf-8",
-	/* gt p */		"gbk:zhtw:zhtw_words:ambiguous-pad:utf-8",
-	/* gtu  */		"gbk:zhtw:zhtw_words:utf-8",
-	/* gtup */		"gbk:zhtw:zhtw_words:ambiguous-pad:utf-8",
+	/* gt   */		"gbk:zhtw:zhtw-words:utf-8",
+	/* gt p */		"gbk:zhtw:zhtw-words:ambiguous-pad:utf-8",
+	/* gtu  */		"gbk:zhtw:zhtw-words:utf-8",
+	/* gtup */		"gbk:zhtw:zhtw-words:ambiguous-pad:utf-8",
 	};
 
 	locale="zh_TW.Big5";
