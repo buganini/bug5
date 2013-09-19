@@ -309,6 +309,7 @@ main(int argc, char *argv[])
 				u2b->input.data=ibuf;
 				u2b->input.len=cc;
 				u2b->input.flags=0;
+				u2b->input.next=NULL;
 				u2b->output_mode=BSDCONV_FD;
 				u2b->output.data=(void *)(uintptr_t)master;
 				bsdconv(u2b);
@@ -321,6 +322,7 @@ main(int argc, char *argv[])
 			b2u->input.data=obuf;
 			b2u->input.len=cc;
 			b2u->input.flags=0;
+			b2u->input.next=NULL;
 			b2u->output_mode=BSDCONV_FD;
 			b2u->output.data=(void *)(uintptr_t)STDOUT_FILENO;
 			bsdconv(b2u);
