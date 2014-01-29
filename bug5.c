@@ -378,11 +378,11 @@ detect_ambipad(void){
 
 		r=c1-c0;
 		if(r==1){
-			bsdconv_ctl(b2u, BSDCONV_AMBIGUOUS_PAD, NULL, 1);
-			bsdconv_ctl(u2b, BSDCONV_AMBIGUOUS_PAD, NULL, 1);
+			bsdconv_ctl(b2u, BSDCONV_CTL_AMBIGUOUS_PAD, NULL, 1);
+			bsdconv_ctl(u2b, BSDCONV_CTL_AMBIGUOUS_PAD, NULL, 1);
 		}else if(r==2){
-			bsdconv_ctl(b2u, BSDCONV_AMBIGUOUS_PAD, NULL, 0);
-			bsdconv_ctl(u2b, BSDCONV_AMBIGUOUS_PAD, NULL, 0);
+			bsdconv_ctl(b2u, BSDCONV_CTL_AMBIGUOUS_PAD, NULL, 0);
+			bsdconv_ctl(u2b, BSDCONV_CTL_AMBIGUOUS_PAD, NULL, 0);
 		}
 	}
 }
