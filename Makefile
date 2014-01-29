@@ -1,6 +1,7 @@
 PREFIX?=/usr/local
-CFLAGS+=-Wall -I${PREFIX}/include
-LDFLAGS+=-lbsdconv -lutil -L${PREFIX}/lib
+LOCALBASE?=${PREFIX}
+CFLAGS+=-Wall -I${LOCALBASE}/include
+LDFLAGS+=-lbsdconv -lutil -L${LOCALBASE}/lib
 
 all:
 	$(CC) ${CFLAGS} bug5.c -o bug5 ${LDFLAGS}
