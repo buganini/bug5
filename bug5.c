@@ -143,7 +143,7 @@ main(int argc, char *argv[])
 			break;
 		case 'p':
 			sw |= 1;
-			if(ambipad<2);
+			if(ambipad<2)
 				ambipad+=1;
 			break;
 		case 'u':
