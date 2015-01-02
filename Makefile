@@ -1,7 +1,7 @@
 DESTDIR?=
 PREFIX?=/usr/local
 LOCALBASE?=${PREFIX}
-CFLAGS+=-Wall -I${LOCALBASE}/include
+CFLAGS+=-Wall -I${LOCALBASE}/include -O2
 LDFLAGS+=-lbsdconv -lutil -L${LOCALBASE}/lib
 
 all:
